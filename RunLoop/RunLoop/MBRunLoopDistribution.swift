@@ -29,7 +29,6 @@ class MBRunLoopDitribution {
     @objc private func _timerFiredMethod(timer: Timer){
         
         /// Do nothing
-        print("timer------\(timer.timeInterval)")
     
 
     }
@@ -89,30 +88,6 @@ class MBRunLoopDitribution {
     func _observerCallbackFunc() -> CFRunLoopObserverCallBack {
         
         return {(observer, activity, info) -> Void in
-        
-            switch(activity) {
-                
-            case CFRunLoopActivity.entry:
-                print("Run Loop已经启动")
-                break
-            case CFRunLoopActivity.beforeTimers:
-                print("Run Loop分配定时任务前")
-                break
-            case CFRunLoopActivity.beforeSources:
-                print("Run Loop分配输入事件源前")
-                break
-            case CFRunLoopActivity.beforeWaiting:
-                print("Run Loop休眠前")
-                break
-            case CFRunLoopActivity.afterWaiting:
-                print("Run Loop休眠后")
-                break
-            case CFRunLoopActivity.exit:
-                print("Run Loop退出后")
-                break
-            default:
-                break
-            }
             
             let runLoopWorkDistribution = Unmanaged<MBRunLoopDitribution>.fromOpaque(info!).takeUnretainedValue()
             
@@ -121,9 +96,6 @@ class MBRunLoopDitribution {
             
             
             var result = false
-            for i in runLoopWorkDistribution.tasks {
-                print("\(i as! MBRunLoopWorkUnit)")
-            }
             while result == false && runLoopWorkDistribution.tasks.count != 0 {
              
                 let unit = runLoopWorkDistribution.tasks.firstObject as? MBRunLoopWorkUnit
@@ -150,7 +122,7 @@ extension MBRunLoopDitribution {
 
 
     public func addTask(unit: MBRunLoopWorkUnit, key:Any){
-        self._registerRunLoopWork(observer: MBRunLoopDitribution.share)
+        MBRunLoopDitribution.share._registerRunLoopWork(observer: MBRunLoopDitribution.share)
         self.tasks.add(unit)
         self.tasksKey.add(key)
     
@@ -176,17 +148,9 @@ extension MBRunLoopDitribution {
 
 
 // MARK: - Add store properties with Runtime
-private var catKey: UInt8 = 0 // 我们还是需要这样的模板
+private var catKey: UInt8 = 0
 extension UITableViewCell{
     
-//    var cat: Cat { // cat「实际上」是一个存储属性
-//        get {
-//            return associatedObject(self, key: &catKey)
-//            { return Cat() } // 设置变量的初始值
-//        }
-//        set { associateObject(self, key: &catKey, value: newValue) }
-//    }
-
     var currentIndexPath:IndexPath?{
     
         get{

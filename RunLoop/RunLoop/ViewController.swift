@@ -57,6 +57,7 @@ extension ViewController: UITableViewDelegate ,UITableViewDataSource{
             print("get------\(cell?.currentIndexPath)")
 
             let current = cell?.currentIndexPath
+            let currentCell = cell
             MBRunLoopDitribution.share.addTask(unit: { () -> Bool in
                 
                 if current != indexPath{
@@ -64,16 +65,9 @@ extension ViewController: UITableViewDelegate ,UITableViewDataSource{
                     return false
                 }
                 
-                let imageview1 = UIImageView(frame: CGRect(x: 105, y: 30, width: 85, height: 85))
-                imageview1.tag = 2
-                imageview1.image = UIImage(contentsOfFile: ViewController.imagePath)
+                print("-----cell----\(currentCell)")
                 
-                
-                UIView.transition(with: (cell?.contentView)!, duration: 0.3, options: [.curveEaseInOut,.transitionCrossDissolve], animations: {
-                    
-                    cell?.contentView.addSubview(imageview1)
-                }, completion: nil)
-                
+                ViewController.task_2(cell: currentCell, indexPaht: indexPath)
                 return true
                 
             }, key: indexPath)
@@ -84,14 +78,8 @@ extension ViewController: UITableViewDelegate ,UITableViewDataSource{
                 
                     return false
                 }
-                let imageview2 = UIImageView(frame: CGRect(x: 200, y: 30, width: 85, height: 85))
-                imageview2.tag = 4
-                
-                imageview2.image = UIImage(contentsOfFile: ViewController.imagePath)
-                UIView.transition(with: (cell?.contentView)!, duration: 0.3, options: [.curveEaseInOut,.transitionCrossDissolve], animations: {
-                    cell?.contentView.addSubview(imageview2)
-                }, completion: nil)
-               // ViewController.task_3(cell: cell, indexPaht: indexPath)
+
+                ViewController.task_3(cell: currentCell, indexPaht: indexPath)
                 return true
             
             }, key: indexPath)
@@ -102,33 +90,14 @@ extension ViewController: UITableViewDelegate ,UITableViewDataSource{
                 
                     return false
                 }
+
                 
-                let label2 = UILabel(frame: CGRect(x: 5, y: 115, width: 300, height: 35))
-                label2.backgroundColor = UIColor.clear
-                label2.lineBreakMode = .byWordWrapping
-                label2.numberOfLines = 0
-                label2.textColor = UIColor.blue
-                label2.text = "Drawing \(indexPath.row) is top priority.Should be distributed into different run loop passes"
-                label2.font = UIFont.boldSystemFont(ofSize: 13)
-                label2.tag = 3
-                cell?.contentView.addSubview(label2)
-                
-                
-                let imageview3 = UIImageView(frame: CGRect(x: 5, y: 30, width: 85, height: 85))
-                imageview3.tag = 5
-                imageview3.image = UIImage(contentsOfFile: ViewController.imagePath)
-                
-                UIView.transition(with: (cell?.contentView)!, duration: 0.3, options: [.curveEaseInOut,.transitionCrossDissolve], animations: {
-                    
-                    cell?.contentView.addSubview(imageview3)
-                }, completion: nil)
-                
-                //ViewController.task_4(cell: cell, indexPaht: indexPath)
+                ViewController.task_4(cell: currentCell, indexPaht: indexPath)
                 return true
                 
             
             }, key: indexPath)
-            print("Current---------\(RunLoop.current.currentMode)")
+            print("Current---------\(RunLoop.current.currentMode)-----\(cell?.contentView.subviews.count)")
             return cell!
             
         
@@ -195,7 +164,6 @@ extension ViewController{
         label2.text = "Drawing \(indexPaht.row) is top priority.Should be distributed into different run loop passes"
         label2.font = UIFont.boldSystemFont(ofSize: 13)
         label2.tag = 3
-        cell?.contentView.addSubview(label2)
         
         
         let imageview3 = UIImageView(frame: CGRect(x: 5, y: 30, width: 85, height: 85))
@@ -203,7 +171,7 @@ extension ViewController{
         imageview3.image = UIImage(contentsOfFile: ViewController.imagePath)
         
         UIView.transition(with: (cell?.contentView)!, duration: 0.3, options: [.curveEaseInOut,.transitionCrossDissolve], animations: { 
-            
+            cell?.contentView.addSubview(label2)
             cell?.contentView.addSubview(imageview3)
         }, completion: nil)
         
@@ -221,7 +189,7 @@ extension ViewController{
         }, completion: nil)
         
     }
-    func task_2(cell: UITableViewCell?, indexPaht: IndexPath) {
+   class func task_2(cell: UITableViewCell?, indexPaht: IndexPath) {
         
         let imageview1 = UIImageView(frame: CGRect(x: 105, y: 30, width: 85, height: 85))
         imageview1.tag = 2
